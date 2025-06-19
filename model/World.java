@@ -19,6 +19,8 @@ public class World {
 	private int playerX = 0;
 	/** The player's y position in the world. */
 	private int playerY = 0;
+	/** The labyrinth */
+	private final ArrayList<ArrayList<FieldType>> labyrinth = new ArrayList<>();
 
 	/** Set of views registered to be notified of world updates. */
 	private final ArrayList<View> views = new ArrayList<>();
@@ -30,6 +32,7 @@ public class World {
 		// Normally, we would check the arguments for proper values
 		this.width = width;
 		this.height = height;
+		initLabyrinth();
 	}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -97,6 +100,10 @@ public class World {
 		updateViews();
 	}
 
+	public ArrayList<ArrayList<FieldType>> getLabyrinth() {
+		return new ArrayList<>(labyrinth);
+	}
+
 	///////////////////////////////////////////////////////////////////////////
 	// Player Management
 	
@@ -133,6 +140,25 @@ public class World {
 		for (int i = 0; i < views.size(); i++) {
 			views.get(i).update(this);
 		}
+	}
+
+	/**
+	 * Very simple method to initialize the labyrinth.
+	 * At a later point we can add more complexity here.
+	 */
+	private void initLabyrinth() {
+		if(!labyrinth.isEmpty()) {
+			return;
+		}
+		for (int i = 0; i < height; i++) {
+			labyrinth.add(new ArrayList<>());
+			for(int j = 0; j < width; j++) {
+				labyrinth.get(i).add(FieldType.WALKABLE);
+			}
+		}
+		labyrinth.getFirst().set(0,FieldType.START);
+		labyrinth.getLast().set(width - 1,FieldType.DESTINATION);
+
 	}
 
 }
