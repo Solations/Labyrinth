@@ -1,117 +1,62 @@
 package controller;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.List;
-
-import javax.swing.JFrame;
 
 import model.Direction;
 import model.World;
-import view.View;
+import view.ControlPanel;
+import view.GamePanel;
+
+import javax.swing.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 /**
- * Our controller listens for key events on the main window.
+ * Der Controller verarbeitet Tasteneingaben und Aktionen aus der GUI.
  */
-public class Controller extends JFrame implements KeyListener, ActionListener, MouseListener {
+public class Controller implements KeyListener {
 
-	/** The world that is updated upon every key press. */
-	private World world;
-	private List<View> views;
+	private final World world;
+	private final GamePanel gamePanel;
+	private final ControlPanel controlPanel;
+	private final JFrame frame;
 
-	/**
-	 * Creates a new instance.
-	 * 
-	 * @param world the world to be updated whenever the player should move.
-	 * @param caged the {@link GraphicsProgram} we want to listen for key presses
-	 *              on.
-	 */
-	public Controller(World world) {
-		// Remember the world
+	public Controller(World world, GamePanel gamePanel, ControlPanel controlPanel, JFrame frame) {
 		this.world = world;
-		
-		// Listen for key events
-		addKeyListener(this);
-		// Listen for mouse events.
-		// Not used in the current implementation.
-		addMouseListener(this);
+		this.gamePanel = gamePanel;
+		this.controlPanel = controlPanel;
+		this.frame = frame;
+
+		this.gamePanel.setFocusable(true);
+		this.gamePanel.requestFocusInWindow();  // Fokus sicher setzen
+		this.gamePanel.addKeyListener(this);    // Jetzt funktioniert Tastatursteuerung
+
+		initActions();
+	}
+
+
+	private void initActions() {
+		controlPanel.restartButton.addActionListener(e -> {
+			int enemies = (int) controlPanel.difficultyBox.getSelectedItem();
+			world.reset(enemies);
+			gamePanel.requestFocusInWindow();
+		});
 	}
 
 	@Override
-	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-	}
+	public void keyTyped(KeyEvent e) {}
 
-	/////////////////// Key Events ////////////////////////////////
 
 	@Override
 	public void keyPressed(KeyEvent e) {
-		// Check if we need to do something. Tells the world to move the player.
 		switch (e.getKeyCode()) {
-		case KeyEvent.VK_UP:
-			world.movePlayer(Direction.UP);
-			break;
+			case KeyEvent.VK_UP -> world.movePlayer(Direction.UP);
+			case KeyEvent.VK_DOWN -> world.movePlayer(Direction.DOWN);
+			case KeyEvent.VK_LEFT -> world.movePlayer(Direction.LEFT);
+			case KeyEvent.VK_RIGHT -> world.movePlayer(Direction.RIGHT);
+			case KeyEvent.VK_SPACE -> gamePanel.requestFocusInWindow();
 
-		case KeyEvent.VK_DOWN:
-			world.movePlayer(Direction.DOWN);
-			break;
-
-		case KeyEvent.VK_LEFT:
-			world.movePlayer(Direction.LEFT);
-			break;
-
-		case KeyEvent.VK_RIGHT:
-			world.movePlayer(Direction.RIGHT);
-			break;
 		}
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	/////////////////// Action Events ////////////////////////////////
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	/////////////////// Mouse Events ////////////////////////////////
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
+	public void keyReleased(KeyEvent e) {}
 }

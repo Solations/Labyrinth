@@ -5,10 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="68b479cd-f23f-4371-82a7-b84e6e2456b3" name="Changes" comment="Fixed .idea">
-      <change afterPath="$PROJECT_DIR$/model/FieldType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/controller/GameState.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model/Enemy.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/model/MazeGenerator.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/view/ControlPanel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/view/GamePanel.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/controller/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/controller/Labyrinth.java" beforeDir="false" afterPath="$PROJECT_DIR$/controller/Labyrinth.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/model/World.java" beforeDir="false" afterPath="$PROJECT_DIR$/model/World.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/view/ConsoleView.java" beforeDir="false" afterPath="$PROJECT_DIR$/view/ConsoleView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/view/GraphicView.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,16 +26,17 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
+        <option value="Class" />
       </list>
     </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 8
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 8
+}</component>
   <component name="ProjectId" id="2yd6l4RlZnMAosrKzY7Jjx5oXs3" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -40,7 +48,7 @@
     "ModuleVcsDetector.initialDetectionPerformed": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.git.unshallow": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "tuttoCompleto",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -65,6 +73,8 @@
       <option name="presentableId" value="Default" />
       <updated>1750152251995</updated>
       <workItem from="1750152255176" duration="4010000" />
+      <workItem from="1750338608282" duration="52000" />
+      <workItem from="1750410604351" duration="661000" />
     </task>
     <task id="LOCAL-00001" summary="Fixed .idea">
       <option name="closed" value="true" />

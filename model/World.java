@@ -1,164 +1,104 @@
 package model;
 
-import java.util.ArrayList;
-
+import controller.GameState;
 import view.View;
 
-/**
- * The world is our model. It saves the bare minimum of information required to
- * accurately reflect the state of the game. Note how this does not know
- * anything about graphics.
- */
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 public class World {
-
-	/** The world's width. */
 	private final int width;
-	/** The world's height. */
 	private final int height;
-	/** The player's x position in the world. */
-	private int playerX = 0;
-	/** The player's y position in the world. */
-	private int playerY = 0;
-	/** The labyrinth */
-	private final ArrayList<ArrayList<FieldType>> labyrinth = new ArrayList<>();
-
-	/** Set of views registered to be notified of world updates. */
+	private int playerX = 1;
+	private int playerY = 1;
+	private ArrayList<ArrayList<FieldType>> labyrinth;
 	private final ArrayList<View> views = new ArrayList<>();
+	private final List<Enemy> enemies = new ArrayList<>();
+	private GameState gameState = GameState.RUNNING;
 
-	/**
-	 * Creates a new world with the given size.t
-	 */
-	public World(int width, int height) {
-		// Normally, we would check the arguments for proper values
+	public World(int width, int height, int enemyCount) {
 		this.width = width;
 		this.height = height;
-		initLabyrinth();
+		this.labyrinth = MazeGenerator.generate(width, height);
+		spawnEnemies(enemyCount);
 	}
 
-	///////////////////////////////////////////////////////////////////////////
-	// Getters and Setters
-
-	/**
-	 * Returns the width of the world.
-	 * 
-	 * @return the width of the world.
-	 */
-	public int getWidth() {
-		return width;
+	private void spawnEnemies(int count) {
+		enemies.clear();
+		Random rand = new Random();
+		while (enemies.size() < count) {
+			int x = rand.nextInt(width);
+			int y = rand.nextInt(height);
+			if (labyrinth.get(y).get(x) == FieldType.WALKABLE && (x != playerX || y != playerY)) {
+				enemies.add(new Enemy(x, y));
+			}
+		}
 	}
 
-	/**
-	 * Returns the height of the world.
-	 * 
-	 * @return the height of the world.
-	 */
-	public int getHeight() {
-		return height;
-	}
+	public void movePlayer(Direction direction) {
+		if (gameState != GameState.RUNNING) return;
 
-	/**
-	 * Returns the player's x position.
-	 * 
-	 * @return the player's x position.
-	 */
-	public int getPlayerX() {
-		return playerX;
-	}
+		int newX = playerX + direction.deltaX;
+		int newY = playerY + direction.deltaY;
 
-	/**
-	 * Sets the player's x position.
-	 * 
-	 * @param playerX the player's x position.
-	 */
-	public void setPlayerX(int playerX) {
-		playerX = Math.max(0, playerX);
-		playerX = Math.min(getWidth() - 1, playerX);
-		this.playerX = playerX;
-		
+		if (isWalkable(newX, newY)) {
+			playerX = newX;
+			playerY = newY;
+		}
+
+		for (Enemy enemy : enemies) {
+			enemy.moveTowards(playerX, playerY, this);
+		}
+
+		checkGameState();
 		updateViews();
 	}
 
-	/**
-	 * Returns the player's y position.
-	 * 
-	 * @return the player's y position.
-	 */
-	public int getPlayerY() {
-		return playerY;
+	private void checkGameState() {
+		for (Enemy e : enemies) {
+			if (e.getX() == playerX && e.getY() == playerY) {
+				gameState = GameState.LOST;
+				return;
+			}
+		}
+
+		if (labyrinth.get(playerY).get(playerX) == FieldType.DESTINATION) {
+			gameState = GameState.WON;
+		}
 	}
 
-	/**
-	 * Sets the player's y position.
-	 * 
-	 * @param playerY the player's y position.
-	 */
-	public void setPlayerY(int playerY) {
-		playerY = Math.max(0, playerY);
-		playerY = Math.min(getHeight() - 1, playerY);
-		this.playerY = playerY;
-		
-		updateViews();
+	public boolean isWalkable(int x, int y) {
+		if (x < 0 || y < 0 || x >= width || y >= height) return false;
+		return labyrinth.get(y).get(x) != FieldType.WALL;
 	}
 
-	public ArrayList<ArrayList<FieldType>> getLabyrinth() {
-		return new ArrayList<>(labyrinth);
-	}
-
-	///////////////////////////////////////////////////////////////////////////
-	// Player Management
-	
-	/**
-	 * Moves the player along the given direction.
-	 * 
-	 * @param direction where to move.
-	 */
-	public void movePlayer(Direction direction) {	
-		// The direction tells us exactly how much we need to move along
-		// every direction
-		setPlayerX(getPlayerX() + direction.deltaX);
-		setPlayerY(getPlayerY() + direction.deltaY);
-	}
-
-	///////////////////////////////////////////////////////////////////////////
-	// View Management
-
-	/**
-	 * Adds the given view of the world and updates it once. Once registered through
-	 * this method, the view will receive updates whenever the world changes.
-	 * 
-	 * @param view the view to be registered.
-	 */
 	public void registerView(View view) {
 		views.add(view);
 		view.update(this);
 	}
 
-	/**
-	 * Updates all views by calling their {@link View#update(World)} methods.
-	 */
 	private void updateViews() {
-		for (int i = 0; i < views.size(); i++) {
-			views.get(i).update(this);
+		for (View view : views) {
+			view.update(this);
 		}
 	}
 
-	/**
-	 * Very simple method to initialize the labyrinth.
-	 * At a later point we can add more complexity here.
-	 */
-	private void initLabyrinth() {
-		if(!labyrinth.isEmpty()) {
-			return;
-		}
-		for (int i = 0; i < height; i++) {
-			labyrinth.add(new ArrayList<>());
-			for(int j = 0; j < width; j++) {
-				labyrinth.get(i).add(FieldType.WALKABLE);
-			}
-		}
-		labyrinth.getFirst().set(0,FieldType.START);
-		labyrinth.getLast().set(width - 1,FieldType.DESTINATION);
-
+	public void reset(int enemyCount) {
+		this.playerX = 1;
+		this.playerY = 1;
+		this.labyrinth = MazeGenerator.generate(width, height);
+		this.gameState = GameState.RUNNING;
+		spawnEnemies(enemyCount);
+		updateViews();
 	}
 
+	// Getter
+	public int getWidth() { return width; }
+	public int getHeight() { return height; }
+	public int getPlayerX() { return playerX; }
+	public int getPlayerY() { return playerY; }
+	public ArrayList<ArrayList<FieldType>> getLabyrinth() { return new ArrayList<>(labyrinth); }
+	public List<Enemy> getEnemies() { return enemies; }
+	public GameState getGameState() { return gameState; }
 }

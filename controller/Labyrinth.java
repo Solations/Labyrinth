@@ -1,63 +1,44 @@
 package controller;
 
-import java.awt.Dimension;
-import java.awt.Insets;
-
-import javax.swing.JFrame;
-
 import model.World;
 import view.ConsoleView;
-import view.GraphicView;
+import view.ControlPanel;
+import view.GamePanel;
+
+import javax.swing.*;
+import java.awt.*;
 
 /**
- * This is our main program. It is responsible for creating all of the objects
- * that are part of the MVC pattern and connecting them with each other.
+ * Main-Klasse zur Initialisierung von Model, View und Controller.
  */
 public class Labyrinth {
 
     public static void main(String[] args) {
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                // Dimension of the game board (10x10).
-                int width = 10;
-                int height = 10;
-                // Create a new game world.
-                World world = new World(width, height);
+        SwingUtilities.invokeLater(() -> {
+            int width = 21;
+            int height = 21;
+            int enemies = 2;
 
-                // Size of a field in the graphical view.
-                Dimension fieldDimensions = new Dimension(25, 25);
-                // Create and register graphical view.
-                GraphicView gview = new GraphicView(
-                        width * fieldDimensions.width,
-                        height * fieldDimensions.height,
-                        fieldDimensions);
-                world.registerView(gview);
-                gview.setVisible(true);
+            World world = new World(width, height, enemies);
 
-                // Create and register console view.
-                ConsoleView cview = new ConsoleView();
-                world.registerView(cview);
+            Dimension fieldSize = new Dimension(25, 25);
+            GamePanel gamePanel = new GamePanel(fieldSize);
+            ControlPanel controlPanel = new ControlPanel();
+            //ConsoleView consoleView = new ConsoleView();
 
-                // Create controller and initialize JFrame.
-                Controller controller = new Controller(world);
-                controller.setTitle("Square Move Practice");
-                controller.setResizable(false);
-                controller.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                controller.getContentPane().add(gview);
-                // pack() is needed before JFrame size can be calculated.
-                controller.pack();
+            world.registerView(gamePanel);
+            //world.registerView(consoleView);
 
-                // Calculate size of window by size of insets (titlebar + border) and size of
-                // graphical view.
-                Insets insets = controller.getInsets();
+            JFrame frame = new JFrame("Labyrinth-Person");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setLayout(new BorderLayout());
+            frame.add(gamePanel, BorderLayout.CENTER);
+            frame.add(controlPanel, BorderLayout.SOUTH);
+            frame.pack();
+            frame.setResizable(false);
+            frame.setVisible(true);
 
-                int windowX = width * fieldDimensions.width + insets.left + insets.right;
-                int windowY = height * fieldDimensions.height + insets.bottom + insets.top;
-                Dimension size = new Dimension(windowX, windowY);
-                controller.setSize(size);
-                controller.setMinimumSize(size);
-                controller.setVisible(true);
-            }
+            new Controller(world, gamePanel, controlPanel, frame);
         });
     }
 }
