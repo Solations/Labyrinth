@@ -1,7 +1,6 @@
 package controller;
 
 import model.World;
-import view.ConsoleView;
 import view.ControlPanel;
 import view.GamePanel;
 

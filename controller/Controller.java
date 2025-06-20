@@ -5,7 +5,6 @@ import model.World;
 import view.ControlPanel;
 import view.GamePanel;
 
-import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
