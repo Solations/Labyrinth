@@ -14,16 +14,33 @@ import java.awt.event.KeyListener;
  */
 public class Controller implements KeyListener {
 
+	/**
+	 * The world.
+	 */
 	private final World world;
+	/**
+	 * The game panel.
+	 */
 	private final GamePanel gamePanel;
+	/**
+	 * The control panel.
+	 */
 	private final ControlPanel controlPanel;
-	private final JFrame frame;
 
-	public Controller(World world, GamePanel gamePanel, ControlPanel controlPanel, JFrame frame) {
+	/**
+	 * Creates a new instance of Controller.
+	 *
+	 * @param world
+	 * 			The world
+	 * @param gamePanel
+	 * 			The game panel
+	 * @param controlPanel
+	 * 			The control panel
+	 */
+	public Controller(World world, GamePanel gamePanel, ControlPanel controlPanel) {
 		this.world = world;
 		this.gamePanel = gamePanel;
 		this.controlPanel = controlPanel;
-		this.frame = frame;
 
 		this.gamePanel.setFocusable(true);
 		this.gamePanel.requestFocusInWindow();  // Fokus sicher setzen
@@ -33,6 +50,9 @@ public class Controller implements KeyListener {
 	}
 
 
+	/**
+	 * Initializes the all actions.
+	 */
 	private void initActions() {
 		controlPanel.restartButton.addActionListener(e -> {
 			int enemies = (int) controlPanel.difficultyBox.getSelectedItem();
@@ -42,9 +62,16 @@ public class Controller implements KeyListener {
 	}
 
 	@Override
-	public void keyTyped(KeyEvent e) {}
+	public void keyTyped(KeyEvent e) {
+		//NOOP
+	}
 
-
+	/**
+	 * Defines the actions on key press events.
+	 *
+	 * @param e
+	 * 		The key events
+	 */
 	@Override
 	public void keyPressed(KeyEvent e) {
 		switch (e.getKeyCode()) {
@@ -58,5 +85,7 @@ public class Controller implements KeyListener {
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {}
+	public void keyReleased(KeyEvent e) {
+		// NOOP
+	}
 }

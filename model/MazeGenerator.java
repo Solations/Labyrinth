@@ -2,7 +2,21 @@ package model;
 
 import java.util.*;
 
+/**
+ * A class to generate the field of the game.
+ */
 public class MazeGenerator {
+
+    /**
+     * Generates a maze of the given width and height.
+     *
+     * @param width
+     *          The width of the maze
+     * @param height
+     *          The height of the maze
+     * @return
+     *          The maze
+     */
     public static ArrayList<ArrayList<FieldType>> generate(int width, int height) {
         ArrayList<ArrayList<FieldType>> maze = new ArrayList<>();
         for (int y = 0; y < height; y++) {
@@ -19,6 +33,20 @@ public class MazeGenerator {
         return maze;
     }
 
+    /**
+     * Carves a path into the given maze.
+     *
+     * @param maze
+     *          The labyrinth to work on
+     * @param x
+     *          The current x position
+     * @param y
+     *          The current y position
+     * @param width
+     *          The width of the maze
+     * @param height
+     *          The height of the maze
+     */
     private static void carvePath(ArrayList<ArrayList<FieldType>> maze, int x, int y, int width, int height) {
         int[] dirs = {0, 1, 2, 3};
         shuffleArray(dirs);
@@ -42,6 +70,12 @@ public class MazeGenerator {
         }
     }
 
+    /**
+     * Shuffles a given array
+     *
+     * @param array
+     *          The array to be shuffled
+     */
     private static void shuffleArray(int[] array) {
         Random rand = new Random();
         for (int i = array.length - 1; i > 0; i--) {

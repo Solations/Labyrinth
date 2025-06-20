@@ -13,20 +13,43 @@ import java.awt.*;
  */
 public class GamePanel extends JPanel implements View {
 
+    /**
+     * The size of the field
+     */
     private final Dimension fieldSize;
+    /**
+     * The game itself
+     */
     private World world;
 
+    /**
+     * Creates a new GamePanel
+     *
+     * @param fieldSize
+     *          The size of the field
+     */
     public GamePanel(Dimension fieldSize) {
         this.fieldSize = fieldSize;
         setPreferredSize(new Dimension(21 * fieldSize.width, 21 * fieldSize.height));
     }
 
+    /**
+     * Updates this view.
+     *
+     * @param world the {@link World} object which called this method.
+     */
     @Override
     public void update(World world) {
         this.world = world;
         repaint();
     }
 
+    /**
+     * Paints a component of the game.
+     *
+     * @param g
+     *      The graphic component to be painted
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -53,7 +76,7 @@ public class GamePanel extends JPanel implements View {
         // Gegner zeichnen
         g.setColor(Color.RED);
         for (Enemy enemy : world.getEnemies()) {
-            g.fillOval(enemy.getX() * fieldSize.width, enemy.getY() * fieldSize.height,
+            g.fillOval(enemy.getXPosition() * fieldSize.width, enemy.getYPosition() * fieldSize.height,
                     fieldSize.width, fieldSize.height);
         }
 
@@ -65,6 +88,13 @@ public class GamePanel extends JPanel implements View {
         }
     }
 
+    /**
+     * Writes a message to the screen.
+     * @param g
+     *      The graphic component.
+     * @param msg
+     *      The message to be written.
+     */
     private void drawMessage(Graphics g, String msg) {
         g.setColor(Color.BLACK);
         g.setFont(new Font("Arial", Font.BOLD, 36));

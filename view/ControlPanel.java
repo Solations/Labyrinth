@@ -10,6 +10,9 @@ public class ControlPanel extends JPanel {
     public JButton restartButton;
     public JComboBox<Integer> difficultyBox;
 
+    /**
+     * Creates a new ControlPanel
+     */
     public ControlPanel() {
         setLayout(new FlowLayout());
 

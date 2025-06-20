@@ -9,6 +9,11 @@ import java.util.ArrayList;
  * Gibt die Welt in der Konsole aus (nur zu Debug-Zwecken).
  */
 public class ConsoleView implements View {
+	/**
+	 * Updates the view.
+	 *
+	 * @param world the {@link World} object which called this method.
+	 */
 	@Override
 	public void update(World world) {
 		final int playerX = world.getPlayerX();

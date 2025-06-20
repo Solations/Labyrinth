@@ -38,7 +38,7 @@ public class Labyrinth {
             frame.setResizable(false);
             frame.setVisible(true);
 
-            new Controller(world, gamePanel, controlPanel, frame);
+            new Controller(world, gamePanel, controlPanel);
         });
     }
 }
